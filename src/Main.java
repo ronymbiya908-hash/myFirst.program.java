@@ -37,7 +37,7 @@ public class Main {
                 if (Character.isDigit(ch)) hasNumber = true;
                 if (!Character.isLetterOrDigit(ch)) hasSpecial = true;
             }
-            if (password.length() >= 8 && hasCapital && hasNumber && hasSpecial) {
+            if (password.length() >= 5 && hasCapital && hasNumber && hasSpecial) {
                 System.out.println("Password successfully saved");
                 break;
             } else {
