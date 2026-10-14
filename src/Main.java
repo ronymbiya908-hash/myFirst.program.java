@@ -3,118 +3,126 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        String username;
-        String password;
-        String cellNumber;
-        String FirstName;
-        String LastName;
+        Login login = new Login();
 
         System.out.print("Enter your first Name: ");
-        FirstName = sc.nextLine();
+        login.FirstName = sc.nextLine().trim();
         System.out.print("Enter your last Name: ");
-        LastName = sc.nextLine();
+        login.LastName = sc.nextLine().trim();
 
+        String username;
         while (true) {
             System.out.print("Enter your user name: ");
-            username = sc.nextLine();
-            if (username.length() <= 5 && username.contains("_")) {
-                System.out.println("Username successfully saved");
+            username = sc.nextLine().trim();
+            if (login.checkUserName(username)) {
+                System.out.println("Username successfully captured");
                 break;
             } else {
-                System.out.println("Username wrongly formatted");
+                System.out.println("Username is not correctly formatted, please ensure that your username contains an underscore and is no more than 5 characters in length.");
             }
         }
 
+        String password;
         while (true) {
             System.out.print("Enter password: ");
-            password = sc.nextLine();
-            boolean hasCapital = false;
-            boolean hasNumber = false;
-            boolean hasSpecial = false;
-            for (int i = 0; i < password.length(); i++) {
-                char ch = password.charAt(i);
-                if (Character.isUpperCase(ch)) hasCapital = true;
-                if (Character.isDigit(ch)) hasNumber = true;
-                if (!Character.isLetterOrDigit(ch)) hasSpecial = true;
-            }
-            if (password.length() >= 5 && hasCapital && hasNumber && hasSpecial) {
-                System.out.println("Password successfully saved");
+            password = sc.nextLine().trim();
+            if (login.checkPasswordComplexity(password)) {
+                System.out.println("Password successfully captured");
                 break;
             } else {
-                System.out.println("Password wrongly formatted");
+                System.out.println("Password is not correctly formatted, please ensure that the password contains at least 8 characters, a capital letter, a number and a special character.");
             }
         }
 
+        String cellNumber;
         while (true) {
             System.out.print("Enter your cell number (+27...): ");
-            cellNumber = sc.nextLine();
-            if (cellNumber.startsWith("+27") && cellNumber.length() == 12) {
-                System.out.println("CellNumber successfully saved");
+            cellNumber = sc.nextLine().trim();
+            // the feedback part that you told me to fix with matches
+            if (cellNumber.matches("^\\+27\\d{9}$")) {
+                System.out.println("Cell phone number successfully added.");
                 break;
             } else {
-                System.out.println("CellNumber wrongly formatted");
+                System.out.println("Cell phone number is incorrectly formatted or does not contain an international code, please correct the number and try again.");
             }
         }
 
-        System.out.println("-----------------Registration Successful-----------------");
-        System.out.println("Please enter your login details");
+        String result = login.registerUser(username, password, cellNumber);
+        System.out.println(result);
 
-        Login myLogin = new Login();
-        myLogin.username = username;
-        myLogin.password = password;
-        myLogin.FirstName = FirstName;
-        myLogin.LastName = LastName;
-        myLogin.loginMethod();
-
-        // PART 2
+        if (result.toLowerCase().contains("successfully")) {
+            System.out.println("-----------------Registration Successful-----------------");
+            System.out.println("Please enter your login details");
+            login.loginMethod();
+        }
+        // PART2
         System.out.println("Welcome to QuickChat.");
-        System.out.print("How many messages do you wish to send? ");
-        int totalToSend = Integer.parseInt(sc.nextLine());
 
         int option = 0;
+
         while (option != 3) {
-            System.out.println("\n1) Send Messages\n2) Show recently sent messages\n3) Quit");
-            System.out.print("Choose: ");
-            option = Integer.parseInt(sc.nextLine());
+            System.out.println("\n1) Send Messages");
+            System.out.println("2) Show recently sent messages");
+            System.out.println("3) Quit");
+            System.out.print("Enter option: ");
+
+            try {
+                option = Integer.parseInt(sc.nextLine().trim());
+            } catch (Exception e) {
+                option = 0;
+            }
 
             if (option == 1) {
-                for (int i = 0; i < totalToSend; i++) {
-                    System.out.print("Enter recipient (+27...): ");
-                    String rec = sc.nextLine();
-                    System.out.print("Enter message (max 250): ");
-                    String txt = sc.nextLine();
+                System.out.print("How many messages do you want to send? ");
+                int numMessages = Integer.parseInt(sc.nextLine().trim());
 
-                    Message msg = new Message(rec, txt, i);
+                for (int i = 0; i < numMessages; i++) {
+                    String recipient;
+                    while (true) {
+                        System.out.print("Enter recipient (max 10 chars, start with +): ");
+                        recipient = sc.nextLine().trim();
+                        Message validator = new Message(recipient, "test", 0);
+                        String res = validator.checkRecipientCell();
+                        System.out.println(res);
+                        if (res.equals("Cell phone number successfully captured.")) break;
+                    }
 
-                    System.out.println(msg.checkMessage());
-                    System.out.println(msg.checkRecipientCell());
+                    String msgText;
+                    while (true) {
+                        System.out.print("Enter message (max 250 chars): ");
+                        msgText = sc.nextLine().trim();
+                        Message validator = new Message(recipient, msgText, 0);
+                        String check = validator.checkMessage();
+                        System.out.println(check);
+                        if (check.equals("Message ready to send.")) break;
+                    }
 
-                    if (msg.checkMessage().equals("Message ready to send.") && msg.checkRecipientCell().contains("successfully")) {
-                        System.out.println("MessageID: " + msg.messageID);
-                        System.out.println("Message Hash: " + msg.createMessageHash());
+                    Message msg = new Message(recipient, msgText, Message.returnTotalMessages());
 
-                        System.out.println("\n1) Send Message\n2) Disregard Message\n3) Store Message");
-                        System.out.print("Choose: ");
-                        int choice = Integer.parseInt(sc.nextLine());
-                        System.out.println(msg.SentMessage(choice));
+                    System.out.print("1-Send, 2-Disregard, 3-Store: ");
+                    int choice = Integer.parseInt(sc.nextLine().trim());
+                    System.out.println(msg.SentMessage(choice));
 
-                        if (choice == 1) {
-                            Message.sentMessages.add(msg);
-                            Message.totalMessages++;
-                            System.out.println(msg.printMessages());
-                        }
-                        if (choice == 3) {
-                            msg.storeMessage();
-                            Message.sentMessages.add(msg);
-                            Message.totalMessages++;
-                        }
+                    if (choice == 1) {
+                        msg.storeMessage();
+                        System.out.println("MessageID: " + msg.getMessageID());
+                        System.out.println("MessageHash: " + msg.getMessageHash());
+                    } else if (choice == 2) {
+                        System.out.println("Message disregarded");
+                    } else if (choice == 3) {
+                        msg.storeMessage();
+                        System.out.println("Message successfully stored.");
                     }
                 }
-                System.out.println("Total messages sent: " + Message.totalMessages);
-            }
-            if (option == 2) {
+                System.out.println("Total messages sent: " + Message.returnTotalMessages());
+
+            } else if (option == 2) {
                 System.out.println("Coming Soon.");
+
+            } else if (option == 3) {
+                System.out.println("Quitting...");
             }
         }
+        sc.close();
     }
 }

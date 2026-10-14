@@ -1,86 +1,85 @@
+import org.json.JSONArray;
+import org.json.JSONObject;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Message {
-    String messageID;
-    int numSent;
-    String recipient;
-    String messageText;
-    String messageHash;
-    static int totalMessages = 0;
-    static ArrayList<Message> sentMessages = new ArrayList<>();
+    public String messageID;
+    public String recipient;
+    public String message;
+    public String messageHash;
+    public int numMessagesSent;
 
-    public Message(String recipient, String messageText, int numSent) {
+    public static List<JSONObject> messagesList = new ArrayList<>();
+    public static int totalMessagesSent = 0;
+
+    public Message(String recipient, String message, int numMessagesSent) {
         this.recipient = recipient;
-        this.messageText = messageText;
-        this.numSent = numSent;
-        this.messageID = generateID();
+        this.message = message;
+        this.numMessagesSent = numMessagesSent;
+        this.messageID = String.format("%010d", new Random().nextInt(1000000000));
         this.messageHash = createMessageHash();
     }
 
-    public String generateID() {
-        Random rand = new Random();
-        long id = 1000000000L + (long)(rand.nextDouble() * 9000000000L);
-        return String.valueOf(id);
-    }
-
-    public boolean checkMessageID() {
-        return messageID.length() <= 10;
-    }
+    public boolean checkMessageID() { return messageID.length() <= 10; }
 
     public String checkRecipientCell() {
-        if (recipient.length() <= 12 && recipient.startsWith("+")) {
-            return "Cell phone number successfully captured.";
-        } else {
+        if (recipient == null ||!recipient.startsWith("+")) {
             return "Cell phone number is incorrectly formatted or does not contain an international code. Please correct the number and try again.";
         }
+        if (!recipient.substring(1).matches("\\d+")) {
+            return "Cell phone number is incorrectly formatted or does not contain an international code. Please correct the number and try again.";
+        }
+        if (recipient.length() > 13) {
+            return "Cell phone number is incorrectly formatted or does not contain an international code. Please correct the number and try again.";
+        }
+        return "Cell phone number successfully captured.";
     }
 
     public String checkMessage() {
-        if (messageText.length() <= 250) {
-            return "Message ready to send.";
-        } else {
-            int excess = messageText.length() - 250;
-            return "Message exceeds 250 characters by " + excess + ", please reduce size.";
+        if (message.length() > 250) {
+            return "Message exceeds 250 characters by " + (message.length() - 250) + ", please reduce size.";
         }
+        return "Message ready to send.";
     }
+    public String checkMessageLength() { return checkMessage(); }
 
     public String createMessageHash() {
-        String[] words = messageText.trim().split("\\s+");
-        String first = words[0].replaceAll("[^A-Za-z0-9]", "").toUpperCase();
-        String last = words[words.length - 1].replaceAll("[^A-Za-z0-9]", "").toUpperCase();
-        String idStart = messageID.substring(0, 2).toUpperCase();
-        String hash = idStart + ":" + numSent + ":" + first + last;
-        messageHash = hash.toUpperCase();
-        return hash.toUpperCase();
-
+        String[] words = message.trim().split("\\s+");
+        String first = words[0];
+        String last = words.length > 1? words[words.length - 1] : first;
+        return (messageID.substring(0,2) + ":" + numMessagesSent + ":" + first + last).toUpperCase();
     }
 
-    public String SentMessage(int option) {
-        if (option == 1) return "Message successfully sent.";
-        if (option == 2) return "Press 0 to delete the message.";
-        if (option == 3) return "Message successfully stored.";
-        return "Invalid option.";
+    public String SentMessage(int choice) {
+        if (choice == 1) return "Message successfully sent.";
+        if (choice == 2) return "Press 0 to delete the message.";
+        if (choice == 3) return "Message successfully stored.";
+        return "Invalid";
     }
 
-    public String printMessages() {
-        return "MessageID: " + messageID +
-                "\nMessageHash: " + messageHash +
-                "\nRecipient: " + recipient +
-                "\nMessage: " + messageText;
-    }
-
-    public int returnTotalMessages() {
-        return Message.totalMessages;
-    }
+    public static String printMessages() { return messagesList.toString(); }
+    public static int returnTotalMessages() { return totalMessagesSent; }
 
     public void storeMessage() {
-        try (FileWriter file = new FileWriter("messages.json", true)) {
-            file.write(printMessages() + "\n---\n");
-        } catch (IOException e) {
-            System.out.println("Error storing message");
-        }
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put("MessageID", messageID);
+            obj.put("MessageHash", messageHash);
+            obj.put("Recipient", recipient);
+            obj.put("Message", message);
+            messagesList.add(obj);
+            totalMessagesSent++;
+            FileWriter file = new FileWriter("src/messages.json");
+            file.write(new JSONArray(messagesList).toString(4));
+            file.close();
+        } catch (Exception e) { System.out.println(e.getMessage()); }
     }
+
+    public String getMessageID() { return messageID; }
+    public String getMessageHash() { return messageHash; }
+    public String getRecipient() { return recipient; }
+    public String getMessage() { return message; }
 }

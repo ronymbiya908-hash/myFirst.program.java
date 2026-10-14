@@ -13,7 +13,7 @@ public class MessageTest {
     public void testMessageLengthFailure() {
         String longText = "a".repeat(300);
         Message msg = new Message("+27718693002", longText, 0);
-        assertTrue(msg.checkMessage().contains("exceeds 250"));
+        assertEquals("Message exceeds 250 characters by 50, please reduce number and try again.", msg.checkMessage());
     }
 
     @Test
@@ -64,8 +64,8 @@ public class MessageTest {
 
     @Test
     public void testTotalMessages() {
-        Message.totalMessages = 2;
+        Message.totalMessagesSent = 2;
         Message msg = new Message("+27718693002", "Hello", 2);
-        assertEquals(2, msg.returnTotalMessages());
+        assertEquals(2, Message.returnTotalMessages());
     }
 }
