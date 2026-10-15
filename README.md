@@ -1,6 +1,6 @@
 # PROG5112 POE - Chat Application
 
-Complete Portfolio of Evidence for Programming 5112 - IIE Rosebank internationl College.
+Complete part of Evidence for Programming 5112 - IIE Rosebank internationl College.
 
 This repository contains the full POE project from Part 1 to Part 3.
 
