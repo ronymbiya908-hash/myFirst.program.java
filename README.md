@@ -3,6 +3,10 @@
 Complete part of Evidence for Programming 5112 - IIE Rosebank internationl College.
 
 This repository contains the full POE project from Part 1 to Part 3.
+for this project what a can say it's a good idee and experience for me because is my first time am using java and for me to creating a chat application in java is an excellent project for understanding how to work with data structures and lopps.
+in a chat application,a (for) loop is very frequently used to send a message to all connected users (a process known as broadcasting).each user is typically
+represented by a connection such as a stocked or a client handler object-stored within a list and how to develop a chat application in java primarily helps in understanding how network architectures concurrent programming and real-time communication work .
+you can see how i class it in order because it's (3 Part)
 
 ### Part 1: User Registration & Login
 - Username validation (must contain _ and max 5 chars)
