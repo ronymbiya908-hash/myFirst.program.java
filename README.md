@@ -23,14 +23,21 @@ you can see how i class it in order because it's (3 Part)
 - Display sent messages, longest message, etc.
 - JUnit tests for all methods
 
-### Part 3: (In Progress)
-- Advanced features, reports, and final enhancements will be added here.
-- Coming soon...
+### Part 3: Part 3: QuickChat - Final Features & Reports
+
+- Display all senders and recipients of sent messages
+- Display the longest sent message
+- Search for a message by Message ID
+- Search for messages by recipient cell number
+- Delete a message using its Message Hash
+- Display full report of all sent messages (Message Hash, Recipient, Message)
+- JUnit tests for all Part 3 methods
+finally am finish the part3 and now the POE is done and complete thank you 
 
 ## How to Run
 1. git clone https://github.com/ronymbiya908-hash/myFirst.program.java.git
 2. Open project in IntelliJ IDEA
-3. Run src/myFirst.program.java for Part 1 & 2
+3. Run src/myFirst.program.java for Part 1 & 2 & 3
 
 ## Tech Stack
 - Java, JUnit 5, org.json, IntelliJ, GitHub
