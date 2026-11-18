@@ -1,14 +1,14 @@
 [
     {
-        "Message": "Hi mike , can you join us for dinner tonight",
-        "Recipient": "+27718693002",
-        "MessageHash": "05:0:HITONIGHT",
-        "MessageID": "0571998233"
+        "Message": "hey bro you good?",
+        "Recipient": "+27695225905",
+        "MessageHash": "00:0:HEYGOOD",
+        "MessageID": "0069040336"
     },
     {
-        "Message": "Hi keegan , did you get the money?",
-        "Recipient": "+27834568",
-        "MessageHash": "03:1:HIMONEY?",
-        "MessageID": "0311477845"
+        "Message": "am good thanks",
+        "Recipient": "+27838884567",
+        "MessageHash": "03:1:AMTHANKS",
+        "MessageID": "0321276304"
     }
 ]

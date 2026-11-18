@@ -31,7 +31,7 @@ public class MessageTest {
     @Test
     public void testMessageHash() {
         Message msg = new Message("+27718693002", "Hi Mike, can you join us for dinner tonight?", 0);
-        msg.messageID = "0012345678"; // pour forcer 00 au début comme dans l'exemple du prof
+        msg.messageID = "0012345678";
         String hash = msg.createMessageHash();
         assertEquals("00:0:HITONIGHT", hash);
     }
@@ -67,5 +67,41 @@ public class MessageTest {
         Message.totalMessagesSent = 2;
         Message msg = new Message("+27718693002", "Hello", 2);
         assertEquals(2, Message.returnTotalMessages());
+    }
+    @Test
+    public void testPopulateMessage() {
+        Message.populateMessage();
+        assertEquals(5, Message.getPart3Count());
+    }
+
+    @Test
+    public void testDisplayLongestMessage() {
+        Message.populateMessage();
+        String longest = Message.displayLongestMessage();
+        assertTrue(longest.contains("Hi Mike, can you join us for dinner tonight?"));
+    }
+
+    @Test
+    public void testSearchMessagesByRecipient() {
+        Message.populateMessage();
+        String result = Message.searchMessagesByRecipient("+27838884567");
+        assertTrue(result.contains("Hi Mike"));
+    }
+
+    @Test
+    public void testDeleteMessageByHash() {
+        Message.populateMessage();
+        String hashToDelete = Message.getHashesArr()[0];
+        String result = Message.deleteMessageByHash(hashToDelete);
+        assertEquals("Message successfully deleted.", result);
+        assertEquals(4, Message.getPart3Count());
+    }
+
+    @Test
+    public void testDisplayReport() {
+        Message.populateMessage();
+        String report = Message.displayReport();
+        assertTrue(report.contains("MessageID:"));
+        assertTrue(report.contains("Recipient:"));
     }
 }

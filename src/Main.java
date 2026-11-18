@@ -117,12 +117,35 @@ public class Main {
                 System.out.println("Total messages sent: " + Message.returnTotalMessages());
 
             } else if (option == 2) {
-                System.out.println("Coming Soon.");
+                // ===== PART 3 =====
+                Message.populateMessage();
+                while (true) {
+                    System.out.println("\n--- Part 3 Menu ---");
+                    System.out.println("1) Display Longest Message");
+                    System.out.println("2) Search by Recipient");
+                    System.out.println("3) Delete by Message Hash");
+                    System.out.println("4) Display Report");
+                    System.out.println("5) Back to Main Menu");
+                    System.out.print("Choose: ");
+                    int choice3 = Integer.parseInt(sc.nextLine().trim());
 
-            } else if (option == 3) {
-                System.out.println("Quitting...");
+                    if (choice3 == 1) {
+                        System.out.println(Message.displayLongestMessage());
+                    } else if (choice3 == 2) {
+                        System.out.print("Enter recipient: ");
+                        String rec = sc.nextLine().trim();
+                        System.out.println(Message.searchMessagesByRecipient(rec));
+                    } else if (choice3 == 3) {
+                        System.out.print("Enter Message Hash to delete: ");
+                        String hash = sc.nextLine().trim();
+                        System.out.println(Message.deleteMessageByHash(hash));
+                    } else if (choice3 == 4) {
+                        System.out.println(Message.displayReport());
+                    } else if (choice3 == 5) {
+                        break;
+                    }
+                }
             }
         }
-        sc.close();
     }
 }
